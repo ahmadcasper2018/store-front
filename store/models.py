@@ -24,7 +24,21 @@ class Customer(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
-    membership = models.CharField(max_length=255, choices=MEMBERSHIPS.choices, default=MEMBERSHIPS.BRONZ)
+    membership = models.CharField(max_length=30, choices=MEMBERSHIPS.choices, default=MEMBERSHIPS.BRONZ)
 
     def __str__(self):
         return f"customer: {self.first_name} {self.last_name}"
+
+
+class Order(models.Model):
+    PENDING = 'PENDING'
+    COMPLETED = 'COMPLETED'
+    FAILED = 'FAILED'
+
+    PAYMENT_STATUS = [
+        (PENDING, 'Pending'),
+        (COMPLETED, 'Completed'),
+        (FAILED, 'Failed'),
+    ]
+    placed_at = models.DateTimeField(auto_now_add=True)
+    payment_status = models.CharField(max_length=30, choices=PAYMENT_STATUS, default=PENDING)
