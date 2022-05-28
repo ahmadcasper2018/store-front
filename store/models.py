@@ -14,11 +14,17 @@ class Product(models.Model):
 
 
 class Customer(models.Model):
+    class MEMBERSHIPS(models.TextChoices):
+        GOLD = 'GOLD', 'Gold'
+        SILVER = 'SILVER', 'Silver'
+        BRONZ = 'BRONZ', 'Bronz'
+
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
+    membership = models.CharField(max_length=255, choices=MEMBERSHIPS.choices,default=MEMBERSHIPS.BRONZ)
 
     def __str__(self):
         return self.title
