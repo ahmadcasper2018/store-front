@@ -22,9 +22,9 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    PENDING = 'PENDING'
-    COMPLETED = 'COMPLETED'
-    FAILED = 'FAILED'
+    PENDING = 'P'
+    COMPLETED = 'C'
+    FAILED = 'F'
 
     PAYMENT_STATUS = [
         (PENDING, 'Pending'),
@@ -32,21 +32,27 @@ class Order(models.Model):
         (FAILED, 'Failed'),
     ]
     placed_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=30, choices=PAYMENT_STATUS, default=PENDING)
+    payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS, default=PENDING)
 
 
 class Customer(models.Model):
-    class MEMBERSHIPS(models.TextChoices):
-        GOLD = 'GOLD', 'Gold'
-        SILVER = 'SILVER', 'Silver'
-        BRONZ = 'BRONZ', 'Bronz'
+
+    GOLD = 'G'
+    SILVER = 'S'
+    BRONZ = 'B'
+
+    MEMBER_CHOICES = [
+        (GOLD, 'Gold'),
+        (SILVER, 'Silver'),
+        (BRONZ, 'Bronz'),
+    ]
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
-    membership = models.CharField(max_length=30, choices=MEMBERSHIPS.choices, default=MEMBERSHIPS.BRONZ)
+    membership = models.CharField(max_length=1, choices=MEMBER_CHOICES, default=BRONZ)
     order = models.ForeignKey(
         Order,
         on_delete=models.PROTECT
@@ -62,4 +68,11 @@ class Address(models.Model):
     customer = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE
+    )
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.PROTECT,
     )
